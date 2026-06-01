@@ -1,6 +1,5 @@
 #ifndef __REMOTE_CONTROL_H
 #define __REMOTE_CONTROL_H
-/* Includes ------------------------------------------------------------------*/
 #include "usart.h"
 #include "stdint.h"
 #include "string.h"
@@ -35,12 +34,12 @@ typedef struct
 {
     UART_HandleTypeDef *RC_USART;
 
-    int16_t ch1; //一个拨杆对应两个ch
-    int16_t ch2;
-    int16_t ch3;
-    int16_t ch4;
+    int16_t ch1; //右水平
+    int16_t ch2;//右垂直
+    int16_t ch3;//左垂直
+    int16_t ch4;//左水平
 
-    uint8_t switch_left; //3 value
+    uint8_t switch_left; 
     uint8_t switch_right;
 
     struct
@@ -57,8 +56,6 @@ typedef struct
 	uint8_t RC_state;
 		
 } RC_Type;
-
-
 
 enum
 {

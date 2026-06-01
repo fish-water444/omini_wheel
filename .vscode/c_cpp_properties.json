@@ -10,7 +10,14 @@
                 "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS",
                 "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
                 "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
-                "${workspaceFolder}/Drivers/CMSIS/Include"
+                "${workspaceFolder}/Drivers/CMSIS/Include",
+                "${workspaceFolder}/Application",
+                "${workspaceFolder}/Bsp",
+                "${workspaceFolder}/Components",
+                "${workspaceFolder}/Components/Algorithm",
+                "${workspaceFolder}/Components/Algorithm/Include",
+                "${workspaceFolder}/Components/Controller",
+                "${workspaceFolder}/Components/Devices"
             ],
             "defines": [
                 "USE_HAL_DRIVER",
