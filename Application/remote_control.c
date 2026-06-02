@@ -51,19 +51,25 @@ void Solve_RC_Lost(void)
 void Solve_RC_Data_Error(void)
 {
     USART_IDLE_Init(remote_control.RC_USART, sbus_rx_buf, SBUS_RX_BUF_NUM);
-}
+}//错误处理
 
 uint8_t RC_Data_is_Error(void)
 {
     // 检查4个通道值是否在合理范围
-    if (abs(remote_control.ch1) > 1000) goto error;
-    if (abs(remote_control.ch2) > 1000) goto error;
-    if (abs(remote_control.ch3) > 1000) goto error;
-    if (abs(remote_control.ch4) > 1000) goto error;
+    if (abs(remote_control.ch1) > 1000) 
+    goto error;
+    if (abs(remote_control.ch2) > 1000) 
+    goto error;
+    if (abs(remote_control.ch3) > 1000) 
+    goto error;
+    if (abs(remote_control.ch4) > 1000) 
+    goto error;
 
     // 检查开关值
-    if (remote_control.switch_left  == 0) goto error;
-    if (remote_control.switch_right == 0) goto error;
+    if (remote_control.switch_left  == 0) 
+    goto error;
+    if (remote_control.switch_right == 0) 
+    goto error;
 
     return 0;  // 数据正常
 

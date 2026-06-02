@@ -8,9 +8,9 @@ typedef struct {
     int16_t  speed_rpm;
     int16_t  torque_current;
     uint8_t  temperature;
-} Motor_Feedback_t;
+} Motor_t;
 
-extern Motor_Feedback_t motor_fb[8];
+extern Motor_t motor_fb[8];
 
 void CAN_User_Init(void);
 

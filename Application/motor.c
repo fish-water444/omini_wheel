@@ -1,6 +1,6 @@
 #include "motor.h"
 
-Motor_Feedback_t motor_fb[8];
+Motor_t motor_fb[8];
 CAN_HandleTypeDef hcan1;
 CAN_HandleTypeDef hcan2;
 
