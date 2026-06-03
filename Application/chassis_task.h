@@ -5,7 +5,7 @@
 
 #define SQRT2 1.4142135f// √2的精确值
 #define WHEEL_OPPOSITE 0.2675f//轮子到中间的距离
-#define WHEEL_RADIUS 76.00f//轮子半径mm
+#define WHEEL_RADIUS 0.076f//轮子半径
 #define VELOCITY_RATIO 3//速度缩放比
 
 #define CHASSIS_VX_MAX 2.64f//前后速度限幅
@@ -49,15 +49,14 @@ typedef struct _Chassis_t
 
     Motor_t ChassisMotor[4]; 
 
-}chassis_t;
+}Chassis_t;
 
-extern chassis_t Chassis;
+extern Chassis_t Chassis;
 
 
 void Chassis_Init(void);
 void Chassis_Control(void);
 void Chassis_Kinematics_Inverse(void);
 void Send_Chassis_Current(void);
-float Max(float a,float b,float c,float d);
 
 #endif

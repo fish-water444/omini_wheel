@@ -1,5 +1,6 @@
 #include "chassis_task.h"
 #include "remote_control.h"
+#include "includes.h"
 
 Chassis_t Chassis = {0};
 static uint32_t dwt_cnt = 0;
@@ -7,11 +8,11 @@ static float dt = 0;
 
 void Chassis_Init()
 {
-    Chassis.WheelRadius=WHEEL_RADIUS/1000.0f;
+    Chassis.WheelRadius=WHEEL_RADIUS;
     Chassis.VelocityRatio=VELOCITY_RATIO;
     Chassis.Mode=Follow_Mode;
 
-    for (uint8_t i=0;i<3;i++)
+    for (uint8_t i=0;i<4;i++)
     {
          PID_Init(&Chassis.ChassisMotor[i].PID_Velocity,
                  16384, 16384, 0,
@@ -28,7 +29,7 @@ void Chassis_Control()
 
     float target_Vx=remote_control.ch3 * 0.004f;//0.004,0.1系数，经验调参
     float target_Vy=remote_control.ch4 * 0.004f;
-    Chassis.vr=remote_control.ch1 * 0.1f;
+    Chassis.Vr=remote_control.ch1 * 0.1f;
 
     float rc=0.01f;
     float temp;
@@ -42,11 +43,11 @@ void Chassis_Control()
         temp=2000;
         if (temp<-2000)
         temp=-2000;
-        Chassis+=temp*dt;
+        Chassis.Vx+=temp*dt;
     }
     else 
     {
-        Chassis+=((target_Vx-Chassis.Vx)/(dt + rc))*dt;
+        Chassis.Vx+=((target_Vx-Chassis.Vx)/(dt + rc))*dt;
     }
 
     if(fabs(target_Vy)<1e-3f)
@@ -58,11 +59,11 @@ void Chassis_Control()
         temp=2000;
         if (temp<-2000)
         temp=-2000;
-        Chassis+=temp*dt;
+        Chassis.Vy+=temp*dt;
     }
     else 
     {
-        Chassis+=((target_Vy-Chassis.Vy)/(dt + rc))*dt;
+        Chassis.Vy+=((target_Vy-Chassis.Vy)/(dt + rc))*dt;
     }
 
 
@@ -89,14 +90,41 @@ void Chassis_Control()
 
     Chassis_Kinematics_Inverse();
 
-    float Max_v=Max(Chassis.V1,Chassis.V2,Chassis.V3,Chassis.V4);
-    float ratio=Chassis.V1/MOTOR_MAX_RPM;
+    float Max_v=fabsf(Chassis.V1);
+    if (fabsf(Chassis.V2)>Max_v)
+        Max_v=fabsf(Chassis.V2);
+    if (fabsf(Chassis.V3)>Max_v)
+        Max_v=fabsf(Chassis.V3);
+    if (fabsf(Chassis.V4)>Max_v)
+        Max_v=fabs(Chassis.V4);
 
-    Chassis.V1/=ratio;
-    Chassis.V2/=ratio;
-    Chassis.V3/=ratio;
-    Chassis.V4/=ratio;
+    float ratio=Max_v/MOTOR_MAX_RPM;
+    if (ratio>1.0f)
+        {
+            Chassis.V1/=ratio;
+            Chassis.V2/=ratio;
+            Chassis.V3/=ratio;
+            Chassis.V4/=ratio;
+        }
 
+
+    for (uint8_t i = 0; i < 4; i++)
+        {
+            float actual = Chassis.ChassisMotor[i].Velocity_RPM / Chassis.WheelReductionRatio;
+            float target = 0;
+            switch (i) {
+            case FR: target = Chassis.V1; break;
+            case FL: target = Chassis.V2; break;
+            case HL: target = Chassis.V3; break;
+            case HR: target = Chassis.V4; break;
+            }
+            Motor_Speed_Calculate(&Chassis.ChassisMotor[i], actual, target);
+
+            if (!isnormal(Chassis.ChassisMotor[i].Output) && Chassis.ChassisMotor[i].Output != 0.0f)
+                Chassis.ChassisMotor[i].Output = 0.0f;
+        }
+
+    Send_Chassis_Current();
 }
 
 void Chassis_Kinematics_Inverse()//?
@@ -107,18 +135,14 @@ void Chassis_Kinematics_Inverse()//?
         Chassis.V1=(-Chassis.Vxtransfer-Chassis.Vytransfer)*vf+Chassis.Vr*rf;//FR
         Chassis.V2=(Chassis.Vxtransfer-Chassis.Vytransfer)*vf+Chassis.Vr*rf;//FL
         Chassis.V3=(Chassis.Vxtransfer+Chassis.Vytransfer)*vf+Chassis.Vr*rf;//HL
-        Chassis.V1=(-Chassis.Vxtransfer+Chassis.Vytransfer)*vf+Chassis.Vr*rf;//HR
+        Chassis.V4=(-Chassis.Vxtransfer+Chassis.Vytransfer)*vf+Chassis.Vr*rf;//HR
 }
 
-float Max(float a,float b,float c,float d)
+void Send_Chassis_Current()
 {
-    float max[4]={a,b,c,d};
-    float max_v=max[0];
-    for (int i=1;i<4;i++)
-    {
-        if (max[i]>max_v)
-            max_v=max[i];
-    }
-    return max_v;
+        Send_Motor_Current_1_4(&hcan1,
+        (int16_t)Chassis.ChassisMotor[FR].Output,
+        (int16_t)Chassis.ChassisMotor[FL].Output,
+        (int16_t)Chassis.ChassisMotor[HL].Output,
+        (int16_t)Chassis.ChassisMotor[HR].Output);
 }
-
