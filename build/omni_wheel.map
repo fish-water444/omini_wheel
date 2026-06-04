@@ -1801,7 +1801,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c.obj
  .debug_line    0x00000000      0xd77 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c.obj
- .debug_str     0x00000000    0xd42ad CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c.obj
+ .debug_str     0x00000000    0xd4282 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c.obj
  .debug_frame   0x00000000      0x250 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c.obj
  .ARM.attributes
@@ -1817,7 +1817,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x11 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c.obj
  .debug_macro   0x00000000      0xad8 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c.obj
  .debug_line    0x00000000       0x86 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c.obj
- .debug_str     0x00000000     0x2ee5 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c.obj
+ .debug_str     0x00000000     0x2eba CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c.obj
  .ARM.attributes
                 0x00000000       0x34 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c.obj
@@ -2041,7 +2041,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c.obj
  .debug_line    0x00000000      0x99b CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c.obj
- .debug_str     0x00000000    0xd3dbe CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c.obj
+ .debug_str     0x00000000    0xd3d93 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c.obj
  .debug_frame   0x00000000       0xf0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c.obj
  .ARM.attributes
@@ -2182,7 +2182,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c.obj
  .debug_line    0x00000000      0x9d2 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c.obj
- .debug_str     0x00000000    0xd3e5c CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c.obj
+ .debug_str     0x00000000    0xd3e31 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c.obj
  .debug_frame   0x00000000      0x274 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c.obj
  .ARM.attributes
@@ -2320,7 +2320,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c.obj
  .debug_line    0x00000000      0x9e3 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c.obj
- .debug_str     0x00000000    0xd3eac CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c.obj
+ .debug_str     0x00000000    0xd3e81 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c.obj
  .debug_frame   0x00000000      0x250 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c.obj
  .ARM.attributes
@@ -2424,7 +2424,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c.obj
  .debug_line    0x00000000      0x63a CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c.obj
- .debug_str     0x00000000    0xd3ab1 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c.obj
+ .debug_str     0x00000000    0xd3a86 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c.obj
  .ARM.attributes
                 0x00000000       0x34 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c.obj
@@ -2638,7 +2638,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c.obj
  .debug_line    0x00000000     0x12a7 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c.obj
- .debug_str     0x00000000    0xd3e40 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c.obj
+ .debug_str     0x00000000    0xd3e15 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c.obj
  .debug_frame   0x00000000       0xac CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c.obj
  .ARM.attributes
@@ -2889,7 +2889,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj
  .debug_line    0x00000000      0x83a CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj
- .debug_str     0x00000000    0xd3ea2 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj
+ .debug_str     0x00000000    0xd3e77 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj
  .debug_frame   0x00000000      0x264 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj
  .ARM.attributes
@@ -3007,7 +3007,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c.obj
  .debug_line    0x00000000      0x745 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c.obj
- .debug_str     0x00000000    0xd3d6b CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c.obj
+ .debug_str     0x00000000    0xd3d40 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c.obj
  .debug_frame   0x00000000       0xdc CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c.obj
  .ARM.attributes
@@ -3419,7 +3419,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x2aa CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c.obj
  .debug_macro   0x00000000      0x12d CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c.obj
  .debug_line    0x00000000      0x934 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c.obj
- .debug_str     0x00000000    0xd3cd8 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c.obj
+ .debug_str     0x00000000    0xd3cad CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c.obj
  .debug_frame   0x00000000      0x174 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c.obj
  .ARM.attributes
@@ -4545,7 +4545,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xaa CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
  .debug_macro   0x00000000       0x43 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
  .debug_line    0x00000000      0x35f CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
- .debug_str     0x00000000     0x8503 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
+ .debug_str     0x00000000     0x84d8 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
  .ARM.attributes
                 0x00000000       0x34 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
@@ -4648,7 +4648,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x91 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
  .debug_macro   0x00000000       0x19 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
  .debug_line    0x00000000      0x848 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
- .debug_str     0x00000000     0xbb93 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
+ .debug_str     0x00000000     0xbb68 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
  .debug_frame   0x00000000      0x1a4 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
  .ARM.attributes
@@ -4857,7 +4857,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xaa CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
  .debug_macro   0x00000000       0x87 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
  .debug_line    0x00000000     0x1229 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
- .debug_str     0x00000000     0xbf86 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
+ .debug_str     0x00000000     0xbf5b CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
  .debug_frame   0x00000000      0x46c CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
  .ARM.attributes
@@ -4977,7 +4977,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xaa CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
  .debug_macro   0x00000000       0x18 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
  .debug_line    0x00000000      0xcd3 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
- .debug_str     0x00000000     0xbab5 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
+ .debug_str     0x00000000     0xba8a CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
  .debug_frame   0x00000000      0x350 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
  .ARM.attributes
@@ -5201,7 +5201,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x87 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
  .debug_macro   0x00000000       0x97 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
  .debug_line    0x00000000      0x3f1 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
- .debug_str     0x00000000     0xbb4b CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
+ .debug_str     0x00000000     0xbb20 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
  .ARM.attributes
                 0x00000000       0x34 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
@@ -5553,7 +5553,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x6a CMakeFiles/omni_wheel.dir/Core/Src/sysmem.c.obj
  .debug_macro   0x00000000      0x1df CMakeFiles/omni_wheel.dir/Core/Src/sysmem.c.obj
  .debug_line    0x00000000      0x254 CMakeFiles/omni_wheel.dir/Core/Src/sysmem.c.obj
- .debug_str     0x00000000     0x7197 CMakeFiles/omni_wheel.dir/Core/Src/sysmem.c.obj
+ .debug_str     0x00000000     0x716c CMakeFiles/omni_wheel.dir/Core/Src/sysmem.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Core/Src/sysmem.c.obj
  .debug_frame   0x00000000       0x34 CMakeFiles/omni_wheel.dir/Core/Src/sysmem.c.obj
  .ARM.attributes
@@ -5684,7 +5684,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 CMakeFiles/omni_wheel.dir/Core/Src/syscalls.c.obj
  .debug_macro   0x00000000       0xce CMakeFiles/omni_wheel.dir/Core/Src/syscalls.c.obj
  .debug_line    0x00000000      0x578 CMakeFiles/omni_wheel.dir/Core/Src/syscalls.c.obj
- .debug_str     0x00000000     0x9492 CMakeFiles/omni_wheel.dir/Core/Src/syscalls.c.obj
+ .debug_str     0x00000000     0x9467 CMakeFiles/omni_wheel.dir/Core/Src/syscalls.c.obj
  .comment       0x00000000       0x13 CMakeFiles/omni_wheel.dir/Core/Src/syscalls.c.obj
  .debug_frame   0x00000000      0x2ac CMakeFiles/omni_wheel.dir/Core/Src/syscalls.c.obj
  .ARM.attributes
@@ -6970,76 +6970,76 @@ LOAD C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\l
  .debug_line    0x00018d06      0x503 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
  .debug_line    0x00019209       0x4a C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\libgcc.a(_dvmd_tls.o)
 
-.debug_str      0x00000000    0xe5274
- .debug_str     0x00000000    0xe5274 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memset.o)
+.debug_str      0x00000000    0xe5249
+ .debug_str     0x00000000    0xe5249 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memset.o)
                                 0x19b (size before relaxing)
- .debug_str     0x000e5274        0x0 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-init.o)
+ .debug_str     0x000e5249        0x0 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-init.o)
                                 0x1e8 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/main.c.obj
-                              0xda86c (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/gpio.c.obj
-                              0xd45c1 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/freertos.c.obj
-                              0xda212 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/adc.c.obj
-                              0xd4501 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/can.c.obj
-                              0xd489d (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/dma.c.obj
-                              0xd44e1 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/spi.c.obj
-                              0xd4a85 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/tim.c.obj
-                              0xd48cb (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/usart.c.obj
-                              0xd4b1d (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/stm32f4xx_it.c.obj
-                              0xd4c9a (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/stm32f4xx_hal_msp.c.obj
-                              0xd44d1 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/stm32f4xx_hal_timebase_tim.c.obj
-                              0xd4763 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c.obj
-                              0xd4259 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c.obj
-                              0xd40a0 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c.obj
-                              0xd3de7 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c.obj
-                              0xd4086 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c.obj
-                              0xd456c (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c.obj
-                              0xd47f0 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c.obj
-                              0xd4366 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c.obj
-                              0xd452a (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c.obj
-                              0xd4ff6 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c.obj
-                              0xd4802 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c.obj
-                              0xd4681 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Core/Src/system_stm32f4xx.c.obj
-                              0xd3c6c (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/list.c.obj
-                               0xa643 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/tasks.c.obj
-                               0xc95e (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c.obj
-                               0xe51d (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c.obj
-                               0xaf85 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c.obj
-                               0x8818 (size before relaxing)
- .debug_str     0x000e5274        0x0 CMakeFiles/omni_wheel.dir/startup_stm32f407xx.s.obj
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/main.c.obj
+                              0xda841 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/gpio.c.obj
+                              0xd4596 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/freertos.c.obj
+                              0xda1e7 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/adc.c.obj
+                              0xd44d6 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/can.c.obj
+                              0xd4872 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/dma.c.obj
+                              0xd44b6 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/spi.c.obj
+                              0xd4a5a (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/tim.c.obj
+                              0xd48a0 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/usart.c.obj
+                              0xd4af2 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/stm32f4xx_it.c.obj
+                              0xd4c6f (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/stm32f4xx_hal_msp.c.obj
+                              0xd44a6 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/stm32f4xx_hal_timebase_tim.c.obj
+                              0xd4738 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c.obj
+                              0xd422e (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c.obj
+                              0xd4075 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c.obj
+                              0xd3dbc (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c.obj
+                              0xd405b (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c.obj
+                              0xd4541 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c.obj
+                              0xd47c5 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c.obj
+                              0xd433b (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c.obj
+                              0xd44ff (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c.obj
+                              0xd4fcb (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c.obj
+                              0xd47d7 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c.obj
+                              0xd4656 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Core/Src/system_stm32f4xx.c.obj
+                              0xd3c41 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/list.c.obj
+                               0xa618 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/tasks.c.obj
+                               0xc933 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c.obj
+                               0xe4f2 (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c.obj
+                               0xaf5a (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c.obj
+                               0x87ed (size before relaxing)
+ .debug_str     0x000e5249        0x0 CMakeFiles/omni_wheel.dir/startup_stm32f407xx.s.obj
                                  0x9a (size before relaxing)
- .debug_str     0x000e5274        0x0 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .debug_str     0x000e5249        0x0 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\libgcc.a(_aeabi_uldivmod.o)
                                  0x7e (size before relaxing)
- .debug_str     0x000e5274        0x0 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
+ .debug_str     0x000e5249        0x0 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
                                 0x696 (size before relaxing)
- .debug_str     0x000e5274        0x0 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\libgcc.a(_dvmd_tls.o)
+ .debug_str     0x000e5249        0x0 C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/thumb/v7e-m+fp/hard\libgcc.a(_dvmd_tls.o)
                                  0x9e (size before relaxing)
 
 .comment        0x00000000       0x12
