@@ -1,39 +1,11 @@
 {
     "configurations": [
         {
-            "name": "STM32F4",
-            "includePath": [
-                "${workspaceFolder}/Core/Inc",
-                "${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc",
-                "${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
-                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/include",
-                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS",
-                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
-                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
-                "${workspaceFolder}/Drivers/CMSIS/Include",
-                "${workspaceFolder}/Application/Chassis_task",
-                "${workspaceFolder}/Application/Intask",
-                "${workspaceFolder}/Bsp/MCU",
-                "${workspaceFolder}/Bsp/BMI088",
-                "${workspaceFolder}/Bsp/Motor",
-                "${workspaceFolder}/Bsp/Remotecontrol",
-                "${workspaceFolder}/Middlewares/Algorithm",
-                "${workspaceFolder}/Middlewares/Algorithm/Include",
-                "${workspaceFolder}/Middlewares/Algorithm/Systemidentification",
-                "${workspaceFolder}/Middlewares/Algorithm/TransFunction",
-                "${workspaceFolder}/Middlewares/Controller",
-                "${workspaceFolder}/Middlewares/Filter",
-                "${workspaceFolder}/Middlewares/Filter/KalmanFilter",
-                "${workspaceFolder}/Middlewares/Filter/FirstOrderFilter",
-                "${workspaceFolder}/Components"
-            ],
-            "defines": [
-                "USE_HAL_DRIVER",
-                "STM32F407xx",
-                "DEBUG"
-            ],
-            "compilerPath": "C:/msys64/mingw64/bin/arm-none-eabi-gcc.exe",
+            "name": "STM32",
+            "compilerPath": "D:/ClionToolchains/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc.exe",
+            "compileCommands": "${workspaceFolder}/build/Debug/compile_commands.json",
             "cStandard": "c11",
+            "cppStandard": "gnu++17",
             "intelliSenseMode": "gcc-arm"
         }
     ],

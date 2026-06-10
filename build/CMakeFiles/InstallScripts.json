@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"C:/Users/LENOVO/Desktop/RM/work/omni_wheel - self/build/cmake_install.cmake",
-		"C:/Users/LENOVO/Desktop/RM/work/omni_wheel - self/build/cmake/stm32cubemx/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

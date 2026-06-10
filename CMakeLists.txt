@@ -47,17 +47,36 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user sources here
+    Application/Chassis_task/chassis_task.c
+    Application/DetectTask/detect_task.c
+    Bsp/Motor/motor.c
+    Bsp/RemoteControl/remote_control.c
+    Core/Src/bsp_dwt.c
+    Core/Src/bsp_usart_idle.c
+    Middlewares/Controller/controller.c
+    Middlewares/Filter/FirstOrderFilter/filter32.c
+    Middlewares/Algorithm/Include/user_lib.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined include paths
+    Application/Chassis_task
+    Application/Intask
+    Application/DetectTask
+    Bsp/BMI088
+    Bsp/MCU
+    Bsp/Motor
+    Bsp/RemoteControl
+    Components
+    Middlewares/Controller
+    Middlewares/Filter/FirstOrderFilter
+    Middlewares/Filter/KalmanFilter
+    Middlewares/Algorithm/Include
 )
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined symbols
+    ARM_MATH_CM4
 )
 
 # Add linked libraries

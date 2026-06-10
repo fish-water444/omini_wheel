@@ -1,6 +1,5 @@
 #include "remote_control.h"
 #include "bsp_CAN.h"
-#include "detect_task.h"
 #include "bsp_dwt.h"
 #include "bsp_usart_idle.h"
 

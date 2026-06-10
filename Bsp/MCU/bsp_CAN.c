@@ -11,8 +11,8 @@
  ******************************************************************************
  */
 #include "bsp_CAN.h"
-#include "VTM_info.h"
 #include "bsp_dwt.h"
+#include "detect_task.h"
 
 uint8_t tempBuff[24] = {0};
 uint8_t enable_navigation;
