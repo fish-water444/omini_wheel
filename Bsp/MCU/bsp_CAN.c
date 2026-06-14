@@ -1,65 +1,63 @@
 /**
- ******************************************************************************
  * @file    bsp_CAN.c
  * @author  Wang Hongxi
- * @version V1.1.0
- * @date    2021/3/30
- * @brief
- ******************************************************************************
- * @attention
+ * @author  Lu Yurui
+ * @version V2.0
+ * @date    2026/06/02
  *
- ******************************************************************************
+ * @brief   CAN通信初始化、接收解析与业务协议发送
+ *
+ * @note
+ * V1.0 (2021/03/30) Wang Hongxi
+ * Initial version.
+ *
+ * V2.0 (2026/06/02) Lu Yurui
+ * Refactored and upgraded CAN communication framework.
  */
+
+/* Includes ------------------------------------------------------------------*/
+
 #include "bsp_CAN.h"
+#include "VTM_info.h"
 #include "bsp_dwt.h"
+#include "user_lib.h"
+#include "chassis_task.h"
+#include "gimbal_task.h"
 #include "detect_task.h"
+#include "remote_control.h"
+#include "cap.h"
+#include "judgement_info.h"
+
+/* Private macros ------------------------------------------------------------*/
+
+// CAN发送邮箱等待超时计数
+#define CAN_TX_WAIT_MAX 10000U
+
+/* Private variables ---------------------------------------------------------*/
+
+CAN_ErrorInfo_t CAN1_ErrorInfo = {0};
+CAN_ErrorInfo_t CAN2_ErrorInfo = {0};
 
 uint8_t tempBuff[24] = {0};
 uint8_t enable_navigation;
 uint32_t Bsp_Can_Count = 0;
 float dt_cap0727 = 0.0f; // 单向电容反馈的时间间隔
-// uint8_t XData[4];
-// uint8_t YData[4];
+uint8_t tgtStatus;
+uint8_t set_posture_mode = 0, debug_posture = 3;
+
+/* Private function declarations ---------------------------------------------*/
 
 /**
- * @Func		CAN_Device_Init
- * @Brief
- * @Param		CAN_HandleTypeDef* hcan
- * @Retval		None
- * @Date       2019/11/4
- **/
-// void CAN_Device_Init(CAN_HandleTypeDef *_hcan)
-// {
-//     // ��ʼ��CAN������Ϊ������״̬ ��Ϊ�������� �����
-//     CAN_FilterTypeDef can_filter_st;
-//     can_filter_st.FilterActivation = ENABLE;
-//     can_filter_st.FilterMode = CAN_FILTERMODE_IDMASK;
-//     can_filter_st.FilterScale = CAN_FILTERSCALE_32BIT;
-//     can_filter_st.FilterIdHigh = 0x0000;
-//     can_filter_st.FilterIdLow = 0x0000;
-//     can_filter_st.FilterMaskIdHigh = 0x0000;
-//     can_filter_st.FilterMaskIdLow = 0x0000;
-//     can_filter_st.FilterBank = 0;
-//     can_filter_st.FilterFIFOAssignment = CAN_RX_FIFO0;
-
-//     // CAN2��CAN1��FilterBank��ͬ
-//     if (_hcan == &hcan2)
-//     {
-//         can_filter_st.SlaveStartFilterBank = 14;
-//         can_filter_st.FilterBank = 14;
-//     }
-
-//     // CAN ��������ʼ��
-//     HAL_CAN_ConfigFilter(_hcan, &can_filter_st);
-//     // ����CAN
-//     HAL_CAN_Start(_hcan);
-//     // ����֪ͨ
-//     HAL_CAN_ActivateNotification(_hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
-// }
-void CAN_Device_Init(void)
+ * @brief 配置CAN接收过滤器
+ *
+ * @param _hcan CAN编号
+ * @param filter_bank 滤波器编号
+ * @return HAL_StatusTypeDef 执行状态
+ */
+static HAL_StatusTypeDef CAN_Config_Filter(CAN_HandleTypeDef *_hcan, uint32_t filter_bank)
 {
-	// ��ʼ��CAN������Ϊ������״̬ ��Ϊ�������� �����
-	CAN_FilterTypeDef can_filter_st;
+	CAN_FilterTypeDef can_filter_st = {0};
+
 	can_filter_st.FilterActivation = ENABLE;
 	can_filter_st.FilterMode = CAN_FILTERMODE_IDMASK;
 	can_filter_st.FilterScale = CAN_FILTERSCALE_32BIT;
@@ -67,44 +65,130 @@ void CAN_Device_Init(void)
 	can_filter_st.FilterIdLow = 0x0000;
 	can_filter_st.FilterMaskIdHigh = 0x0000;
 	can_filter_st.FilterMaskIdLow = 0x0000;
-	can_filter_st.FilterBank = 0;
+	can_filter_st.FilterBank = filter_bank;
 	can_filter_st.FilterFIFOAssignment = CAN_RX_FIFO0;
-	// CAN ��������ʼ��
-	while (HAL_CAN_ConfigFilter(&hcan1, &can_filter_st) != HAL_OK)
+	can_filter_st.SlaveStartFilterBank = 14;
+
+	return HAL_CAN_ConfigFilter(_hcan, &can_filter_st);
+}
+
+/**
+ * @brief CAN收发错误信息收集
+ *
+ * @param _hcan CAN编号
+ * @return CAN_ErrorInfo_t* 错误信息指针
+ */
+static CAN_ErrorInfo_t *CAN_Get_ErrorInfo(CAN_HandleTypeDef *_hcan)
+{
+	if (_hcan == &hcan1)
+		return &CAN1_ErrorInfo;
+	if (_hcan == &hcan2)
+		return &CAN2_ErrorInfo;
+	return NULL;
+}
+
+/* Function prototypes -------------------------------------------------------*/
+
+/**
+ * @brief 发送标准数据帧
+ *
+ * @param _hcan CAN编号
+ * @param std_id 标准帧ID
+ * @param data 被发送的数据指针
+ * @param len 数据长度
+ * @return HAL_StatusTypeDef 执行状态
+ */
+HAL_StatusTypeDef CAN_Send_Data(CAN_HandleTypeDef *_hcan, uint16_t std_id, uint8_t *data, uint8_t len)
+{
+	CAN_TxHeaderTypeDef tx_header = {0};
+	uint32_t send_mail_box = 0;
+	uint32_t count = 0;
+	HAL_StatusTypeDef ret;
+	CAN_ErrorInfo_t *err = CAN_Get_ErrorInfo(_hcan);
+
+	if (_hcan == NULL || data == NULL || len > 8U)
+		return HAL_ERROR;
+
+	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
 	{
-	}
-	// ����CAN
-	while (HAL_CAN_Start(&hcan1) != HAL_OK)
-	{
-	}
-	// ����֪ͨ
-	while (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
-	{
+		if (++count > CAN_TX_WAIT_MAX)
+		{
+			if (err != NULL)
+				err->tx_timeout++;
+			return HAL_TIMEOUT;
+		}
 	}
 
-	can_filter_st.SlaveStartFilterBank = 14;
-	can_filter_st.FilterBank = 14;
-	// CAN ��������ʼ��
-	while (HAL_CAN_ConfigFilter(&hcan2, &can_filter_st) != HAL_OK)
+	count = 0;
+	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0U)
 	{
+		if (++count > CAN_TX_WAIT_MAX)
+		{
+			if (err != NULL)
+			{
+				err->tx_timeout++;
+				err->last_error = HAL_CAN_GetError(_hcan);
+			}
+
+			HAL_CAN_AbortTxRequest(_hcan,
+								   CAN_TX_MAILBOX0 | CAN_TX_MAILBOX1 | CAN_TX_MAILBOX2);
+			return HAL_TIMEOUT;
+		}
 	}
-	// ����CAN
-	while (HAL_CAN_Start(&hcan2) != HAL_OK)
+
+	tx_header.StdId = std_id;
+	tx_header.IDE = CAN_ID_STD;
+	tx_header.RTR = CAN_RTR_DATA;
+	tx_header.DLC = len;
+
+	ret = HAL_CAN_AddTxMessage(_hcan, &tx_header, data, &send_mail_box);
+	if (ret != HAL_OK && err != NULL)
 	{
+		err->tx_error++;
+		err->last_error = HAL_CAN_GetError(_hcan);
 	}
-	// ����֪ͨ
-	while (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+
+	return ret;
+}
+
+/**
+ * @brief 初始化CAN总线
+ *
+ */
+void CAN_Device_Init(void)
+{
+	if (CAN_Config_Filter(&hcan1, 0) != HAL_OK)
 	{
+		Error_Handler();
+	}
+	if (HAL_CAN_Start(&hcan1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	if (CAN_Config_Filter(&hcan2, 14) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	if (HAL_CAN_Start(&hcan2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+	{
+		Error_Handler();
 	}
 }
 
 /**
- * @Func	    void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* _hcan)
- * @Brief      CAN���߽��ջص����� ���ڽ��յ������
- * @Param	    CAN_HandleTypeDef* _hcan
- * @Retval	    None
- * @Date       2019/11/4
- **/
+ * @brief HAL库CAN接收FIFO0中断
+ *
+ * @param hcan CAN编号
+ */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *_hcan)
 {
 	CAN_RxHeaderTypeDef rx_header;
@@ -202,6 +286,20 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *_hcan)
 			if (rx_data[6] != 0 && rx_data[7] != 0)
 				get_RMD_info(&Gimbal.YawMotor, rx_data);
 			break;
+		case 0x155:
+			tempBuff[0] = rx_data[0];
+			tempBuff[1] = rx_data[1];
+			tempBuff[2] = rx_data[2];
+			tempBuff[3] = rx_data[3];
+			tempBuff[4] = rx_data[4];
+			tempBuff[5] = rx_data[5];
+			tempBuff[6] = rx_data[6];
+			tempBuff[7] = rx_data[7];
+			tgtStatus = tempBuff[0];
+			decision_info.allow_to_lock = tempBuff[1];
+			set_posture_mode = tempBuff[6];
+			debug_posture = tempBuff[7];
+			break;
 		case 0x250:
 			tempBuff[0] = rx_data[0]; // NFX
 			tempBuff[1] = rx_data[1]; // NFX
@@ -226,9 +324,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *_hcan)
 			tempBuff[13] = rx_data[5]; // TVX
 			tempBuff[14] = rx_data[6]; // TVY
 			tempBuff[15] = rx_data[7]; // TVY
-			Chassis.decision_info.TgtStatus = tempBuff[8];
-			Chassis.decision_info.do_spin = tempBuff[9];
-			Chassis.decision_info.open_cap = tempBuff[10];
+			decision_info.tgtStatus = tempBuff[8];
+			decision_info.reached_target = tempBuff[9];
 			break;
 		case CAN_GIMBAL_Info_ID:
 			Gimbal_Buf[0] = rx_data[0];
@@ -242,480 +339,184 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *_hcan)
 	}
 }
 
-// ͨ��CAN���߷���ң������Ϣ ��������δʹ��
+/**
+ * @brief 发送DT7遥控器数据
+ *
+ * @param _hcan CAN编号
+ * @param rc_data 遥控器数据指针
+ */
 void Send_RC_Data(CAN_HandleTypeDef *_hcan, uint8_t *rc_data)
 {
-	static CAN_TxHeaderTypeDef TX_MSG;
-	static uint8_t CAN_Send_Data[8];
-	uint32_t send_mail_box;
+	uint8_t can_send_data[8];
 
-	TX_MSG.StdId = CAN_RC_DATA_Frame_0;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
-	CAN_Send_Data[0] = rc_data[0];
-	CAN_Send_Data[1] = rc_data[1];
-	CAN_Send_Data[2] = rc_data[2];
-	CAN_Send_Data[3] = rc_data[3];
-	CAN_Send_Data[4] = rc_data[4];
-	CAN_Send_Data[5] = rc_data[5];
-	CAN_Send_Data[6] = rc_data[6];
-	CAN_Send_Data[7] = rc_data[7];
+	if (rc_data == NULL)
+		return;
 
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
+	for (uint8_t i = 0; i < 8U; i++)
+		can_send_data[i] = rc_data[i];
+	CAN_Send_Data(_hcan, CAN_RC_DATA_Frame_0, can_send_data, 8);
 
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
-
-	TX_MSG.StdId = CAN_RC_DATA_Frame_1;
-	CAN_Send_Data[0] = rc_data[8];
-	CAN_Send_Data[1] = rc_data[9];
-	CAN_Send_Data[2] = rc_data[10];
-	CAN_Send_Data[3] = rc_data[11];
-	CAN_Send_Data[4] = rc_data[12];
-	CAN_Send_Data[5] = rc_data[13];
-	CAN_Send_Data[6] = rc_data[14];
-	CAN_Send_Data[7] = rc_data[15];
-
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
+	for (uint8_t i = 0; i < 8U; i++)
+		can_send_data[i] = rc_data[i + 8U];
+	CAN_Send_Data(_hcan, CAN_RC_DATA_Frame_1, can_send_data, 8);
 }
 
+/**
+ * @brief 图传链路数据发送
+ *
+ * @param _hcan CAN编号
+ * @param vtm_data 图传数据指针
+ */
 void Send_VTM_Data(CAN_HandleTypeDef *_hcan, uint8_t *vtm_data)
 {
-	static CAN_TxHeaderTypeDef TX_MSG;
-	static uint8_t CAN_Send_Data[8];
-	uint32_t send_mail_box;
+	uint8_t can_send_data[8] = {0};
 
-	TX_MSG.StdId = CAN_VTM_DATA_Frame_0;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
-	CAN_Send_Data[0] = vtm_data[0];
-	CAN_Send_Data[1] = vtm_data[1];
-	CAN_Send_Data[2] = vtm_data[2];
-	CAN_Send_Data[3] = vtm_data[3];
-	CAN_Send_Data[4] = vtm_data[4];
-	CAN_Send_Data[5] = vtm_data[5];
-	CAN_Send_Data[6] = vtm_data[6];
-	CAN_Send_Data[7] = vtm_data[7];
+	if (vtm_data == NULL)
+		return;
 
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
+	for (uint8_t i = 0; i < 8U; i++)
+		can_send_data[i] = vtm_data[i];
+	CAN_Send_Data(_hcan, CAN_VTM_DATA_Frame_0, can_send_data, 8);
 
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
-
-	TX_MSG.StdId = CAN_VTM_DATA_Frame_1;
-	CAN_Send_Data[0] = vtm_data[8];
-	CAN_Send_Data[1] = vtm_data[9];
-	CAN_Send_Data[2] = vtm_data[10];
-	CAN_Send_Data[3] = vtm_data[11];
-	CAN_Send_Data[4] = 0;
-	CAN_Send_Data[5] = 0;
-	CAN_Send_Data[6] = 0;
-	CAN_Send_Data[7] = 0;
-
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
+	can_send_data[0] = vtm_data[8];
+	can_send_data[1] = vtm_data[9];
+	can_send_data[2] = vtm_data[10];
+	can_send_data[3] = vtm_data[11];
+	can_send_data[4] = 0;
+	can_send_data[5] = 0;
+	can_send_data[6] = 0;
+	can_send_data[7] = 0;
+	CAN_Send_Data(_hcan, CAN_VTM_DATA_Frame_1, can_send_data, 8);
 }
 
+/**
+ * @brief 发送功率控制数据
+ *
+ * @param _hcan CAN编号
+ * @param Chassis_power_limit 底盘功率上限
+ * @param Chassis_power_buffer 底盘缓冲能量
+ */
 void Send_Power_Data(CAN_HandleTypeDef *_hcan, uint16_t Chassis_power_limit, uint16_t Chassis_power_buffer)
 {
 	if (Chassis_power_limit >= 10240)
 		Chassis_power_limit /= 256;
 	if (Chassis_power_limit >= 200)
 		Chassis_power_limit /= 5;
-	static CAN_TxHeaderTypeDef TX_MSG;
-	static uint8_t CAN_Send_Data[8];
-	uint32_t send_mail_box;
+	uint8_t can_send_data[8] = {0};
 
-	TX_MSG.StdId = CAN_POWER_INFO_ID;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
-	CAN_Send_Data[0] = Chassis_power_limit >> 8;
-	CAN_Send_Data[1] = Chassis_power_limit;
-	CAN_Send_Data[2] = Chassis_power_buffer >> 8;
-	CAN_Send_Data[3] = Chassis_power_buffer;
-	CAN_Send_Data[4] = 0;
-	CAN_Send_Data[5] = 0;
-	CAN_Send_Data[6] = 0;
-	CAN_Send_Data[7] = 0;
+	can_send_data[0] = Chassis_power_limit >> 8;
+	can_send_data[1] = Chassis_power_limit;
+	can_send_data[2] = Chassis_power_buffer >> 8;
+	can_send_data[3] = Chassis_power_buffer;
 
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0)
-	{
-	}
-	/* Check Tx Mailbox 0 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
+	CAN_Send_Data(_hcan, CAN_POWER_INFO_ID, can_send_data, 8);
 }
 
-void Send_Reset_Command(CAN_HandleTypeDef *_hcan)
-{
-	static CAN_TxHeaderTypeDef TX_MSG;
-	static uint8_t CAN_Send_Data[8];
-	uint32_t send_mail_box;
-
-	TX_MSG.StdId = CAN_SYSTEM_RESET_CMD;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
-
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
-}
-
-void SendAerialData(CAN_HandleTypeDef *_hcan, float *X, float *Y, uint8_t *KeyBoard)
-{
-	static CAN_TxHeaderTypeDef TX_MSG;
-	static uint8_t CAN_Send_Data[8];
-	uint32_t send_mail_box;
-	static uint8_t XData[4];
-	static uint8_t YData[4];
-
-	float2u8array(X, XData, TRUE);
-	float2u8array(Y, YData, TRUE);
-
-	TX_MSG.StdId = CAN_AERIAL_DATA_1;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
-	CAN_Send_Data[0] = XData[0];
-	CAN_Send_Data[1] = XData[1];
-	CAN_Send_Data[2] = XData[2];
-	CAN_Send_Data[3] = XData[3];
-	CAN_Send_Data[4] = YData[0];
-	CAN_Send_Data[5] = YData[1];
-	CAN_Send_Data[6] = YData[2];
-	CAN_Send_Data[7] = YData[3];
-
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0)
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
-
-	TX_MSG.StdId = CAN_AERIAL_DATA_2;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
-	CAN_Send_Data[0] = map_command.cmd_keyboard;
-	CAN_Send_Data[1] = 0;
-	CAN_Send_Data[2] = 0;
-	CAN_Send_Data[3] = 0;
-	CAN_Send_Data[4] = 0;
-	CAN_Send_Data[5] = 0;
-	CAN_Send_Data[6] = 0;
-	CAN_Send_Data[7] = 77;
-
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
-}
-
-void Send_Robot_Info(CAN_HandleTypeDef *_hcan, uint8_t ID, uint16_t heatLimit, uint16_t heat1, uint16_t bulletSpeed, uint16_t cooling_value,
+/**
+ * @brief 发送机器人状态信息
+ *
+ * @param _hcan CAN编号
+ * @param ID 机器人ID
+ * @param heatLimit 热量上限
+ * @param heat 当前热量
+ * @param bulletSpeed 弹速
+ * @param cooling_value 冷却值
+ * @param UWBPosX UWB X坐标
+ * @param IsEnemyInvincible 敌方无敌状态
+ * @param UWBPosY UWB Y坐标
+ * @param gameStatus 比赛状态
+ * @param Inposflag 到点标志(已改为由导航下发，待删除)
+ */
+void Send_Robot_Info(CAN_HandleTypeDef *_hcan, uint8_t ID, uint16_t heatLimit, uint16_t heat, uint16_t bulletSpeed, uint16_t cooling_value,
 					 uint16_t UWBPosX, uint8_t IsEnemyInvincible, uint16_t UWBPosY, uint8_t gameStatus, uint8_t Inposflag)
 {
-	static CAN_TxHeaderTypeDef TX_MSG;
-	static uint8_t CAN_Send_Data[8];
-	uint32_t send_mail_box;
+	uint8_t can_send_data[8] = {0};
 
-	TX_MSG.StdId = 0x133;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
-	CAN_Send_Data[0] = ID;
-	CAN_Send_Data[1] = (heatLimit >> 8) & 0xFF;
-	CAN_Send_Data[2] = heatLimit & 0xFF;
-	CAN_Send_Data[3] = (heat1 >> 8) & 0xFF;
-	CAN_Send_Data[4] = heat1 & 0xFF;
-	CAN_Send_Data[5] = (bulletSpeed >> 8) & 0xFF;
-	CAN_Send_Data[6] = bulletSpeed & 0xFF;
-
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
-
-	TX_MSG.StdId = 0x134;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
+	can_send_data[0] = ID;
+	can_send_data[1] = (heatLimit >> 8) & 0xFF;
+	can_send_data[2] = heatLimit & 0xFF;
+	can_send_data[3] = (heat >> 8) & 0xFF;
+	can_send_data[4] = heat & 0xFF;
+	can_send_data[5] = (bulletSpeed >> 8) & 0xFF;
+	can_send_data[6] = bulletSpeed & 0xFF;
+	can_send_data[7] = (uint8_t)cooling_value;
+	CAN_Send_Data(_hcan, 0x133, can_send_data, 8);
 
 	if (Chassis.Mode == Follow_Mode)
 		IsEnemyInvincible = 0;
 
-	CAN_Send_Data[1] = (UWBPosX >> 8) & 0xFF;
-	CAN_Send_Data[2] = UWBPosX & 0xFF;
-	CAN_Send_Data[3] = IsEnemyInvincible;
-	CAN_Send_Data[4] = (UWBPosY >> 8) & 0xFF;
-	CAN_Send_Data[5] = UWBPosY & 0xFF;
-	CAN_Send_Data[6] = Inposflag;
-	CAN_Send_Data[7] = gameStatus;
-
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
+	can_send_data[0] = 0;
+	can_send_data[1] = (UWBPosX >> 8) & 0xFF;
+	can_send_data[2] = UWBPosX & 0xFF;
+	can_send_data[3] = IsEnemyInvincible;
+	can_send_data[4] = (UWBPosY >> 8) & 0xFF;
+	can_send_data[5] = UWBPosY & 0xFF;
+	can_send_data[6] = Inposflag;
+	can_send_data[7] = gameStatus;
+	CAN_Send_Data(_hcan, 0x134, can_send_data, 8);
 }
 
+/**
+ * @brief 发送决策信息
+ *
+ * @param _hcan CAN编号
+ */
+void Send_Decision_Info(CAN_HandleTypeDef *_hcan)
+{
+	static uint16_t cruise_begin = 0, cruise_end = 0, cruise_speed = 0, move_ratio = 0;
+	uint8_t can_send_data[8] = {0};
+
+	cruise_begin = float_to_uint16(decision_info.cruise_begin, -180.0f, 180.0f, 16);
+	cruise_end = float_to_uint16(decision_info.cruise_end, -180.0f, 180.0f, 16);
+	cruise_speed = float_to_uint16(decision_info.cruise_speed, 0.0f, 1.0f, 16);
+	move_ratio = float_to_uint16(decision_info.move_speed_ratio, 0.0f, 1.0f, 16);
+
+	can_send_data[0] = (cruise_begin & 0xFF00) >> 8;
+	can_send_data[1] = cruise_begin & 0x00FF;
+	can_send_data[2] = (cruise_end & 0xFF00) >> 8;
+	can_send_data[3] = cruise_end & 0x00FF;
+	can_send_data[4] = (move_ratio & 0xFF00) >> 8;
+	can_send_data[5] = move_ratio & 0x00FF;
+	can_send_data[6] = (cruise_speed & 0xFF00) >> 8;
+	can_send_data[7] = cruise_speed & 0x00FF;
+	CAN_Send_Data(_hcan, 0x135, can_send_data, 8);
+
+	static uint16_t stage_remain_time, robot_HP;
+	stage_remain_time = (uint16_t)(game_status.stage_remain_time);
+	robot_HP = (uint16_t)(robot_state.current_HP);
+
+	can_send_data[0] = (stage_remain_time & 0xFF00) >> 8;
+	can_send_data[1] = stage_remain_time & 0x00FF;
+	can_send_data[2] = (robot_HP & 0xFF00) >> 8;
+	can_send_data[3] = robot_HP & 0x00FF;
+	can_send_data[4] = decision_info.sentryPosture;
+	can_send_data[5] = decision_info.sentryPresentPose;
+	can_send_data[6] = decision_info.attack_outpost;
+	can_send_data[7] = 0;
+	CAN_Send_Data(_hcan, 0x136, can_send_data, 8);
+}
+
+/**
+ * @brief 发送导航所需数据
+ *
+ * @param _hcan CAN编号
+ */
 void Send_Nav_Data_RMUC(CAN_HandleTypeDef *_hcan)
 {
-	static CAN_TxHeaderTypeDef TX_MSG;
-	static uint8_t CAN_Send_Data[8];
-	uint32_t send_mail_box;
 	static uint16_t TargetX = 0, TargetY = 0;
+	uint8_t can_send_data[8] = {0};
 
 	TargetX = (uint16_t)(map_command.target_position_x * 1000);
 	TargetY = (uint16_t)(map_command.target_position_y * 1000);
 
-	TX_MSG.StdId = 0x503;
-	TX_MSG.IDE = CAN_ID_STD;
-	TX_MSG.RTR = CAN_RTR_DATA;
-	TX_MSG.DLC = 0x08;
-	CAN_Send_Data[0] = Chassis.status;
-	CAN_Send_Data[1] = Chassis.decision_info.allowToAttackOutpost;
-	CAN_Send_Data[2] = (TargetX & 0xFF00) >> 8;
-	CAN_Send_Data[3] = (TargetX & 0x00FF);
-	CAN_Send_Data[4] = (TargetY & 0xFF00) >> 8;
-	CAN_Send_Data[5] = (TargetY & 0x00FF);
-	CAN_Send_Data[6] = Chassis.decision_info.isEnemyPostAlive;
-	CAN_Send_Data[7] = 77;
+	can_send_data[0] = Chassis.status;
+	can_send_data[1] = 0;
+	can_send_data[2] = (TargetX & 0xFF00) >> 8;
+	can_send_data[3] = (TargetX & 0x00FF);
+	can_send_data[4] = (TargetY & 0xFF00) >> 8;
+	can_send_data[5] = (TargetY & 0x00FF);
+	can_send_data[6] = decision_info.isEnemyPostAlive;
+	can_send_data[7] = 77;
 
-	while (!((_hcan->State == HAL_CAN_STATE_READY) || (_hcan->State == HAL_CAN_STATE_LISTENING)))
-	{
-	}
-	while (HAL_CAN_GetTxMailboxesFreeLevel(_hcan) == 0) // ����������䶼�����˾͵�һ�����ֱ������ĳ���������
-	{
-	}
-	/* Check Tx Mailbox 1 status */
-	if ((_hcan->Instance->TSR & CAN_TSR_TME0) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX0;
-	}
-	/* Check Tx Mailbox 1 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME1) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX1;
-	}
-
-	/* Check Tx Mailbox 2 status */
-	else if ((_hcan->Instance->TSR & CAN_TSR_TME2) != 0U)
-	{
-		send_mail_box = CAN_TX_MAILBOX2;
-	}
-	HAL_CAN_AddTxMessage(_hcan, &TX_MSG, CAN_Send_Data, &send_mail_box);
-}
-
-void float2u8array(float *FloatData, uint8_t *u8Array, bool Key)
-{
-	static uint8_t TempU8Arr[4];
-
-	*(float *)TempU8Arr = *FloatData;
-	if (Key == TRUE)
-	{
-		u8Array[0] = TempU8Arr[0];
-		u8Array[1] = TempU8Arr[1];
-		u8Array[2] = TempU8Arr[2];
-		u8Array[3] = TempU8Arr[3];
-	}
-	else
-	{
-		u8Array[3] = TempU8Arr[0];
-		u8Array[2] = TempU8Arr[1];
-		u8Array[1] = TempU8Arr[2];
-		u8Array[0] = TempU8Arr[3];
-	}
+	CAN_Send_Data(_hcan, 0x503, can_send_data, 8);
 }
