@@ -2,7 +2,7 @@
     "configurations": [
         {
             "name": "STM32",
-            "compilerPath": "D:/ClionToolchains/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gcc.exe",
+            "compilerPath": "C:/msys64/mingw64/bin/arm-none-eabi-gcc.exe",
             "compileCommands": "${workspaceFolder}/build/Debug/compile_commands.json",
             "cStandard": "c11",
             "cppStandard": "gnu++17",

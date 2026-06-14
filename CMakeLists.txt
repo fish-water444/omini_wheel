@@ -51,6 +51,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Application/DetectTask/detect_task.c
     Bsp/Motor/motor.c
     Bsp/RemoteControl/remote_control.c
+    Bsp/MCU/bsp_CAN.c
     Core/Src/bsp_dwt.c
     Core/Src/bsp_usart_idle.c
     Middlewares/Controller/controller.c
